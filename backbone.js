@@ -75,7 +75,6 @@
       var that = this;
       var initializer = function(){
 
-      console.log('that', that);
       if (_.isFunction(_function) ){
         var oldFunction = _function;
 
@@ -93,7 +92,7 @@
 
       };
 
-      var ii = new initializer();
+      var ii = initializer.apply(null, {});
     });
   };
 
