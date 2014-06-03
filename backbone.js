@@ -63,12 +63,11 @@
   // form param named `model`.
   Backbone.emulateJSON = false;
 
-  var propagateProps = function(self, protoProps){
+  var propagateProps = function(realSelf, self, protoProps){
 
      _.each(protoProps, function(_function, functionName){
       // We are checking we are not a  Model, View, or Collection, and only
       // a regular function.
-
 
       var that = this;
       var initializer = function(){
@@ -78,9 +77,10 @@
         var oldFunction = _function;
 
         self[functionName]  = function(){
+          
           if (this === that  || this === undefined  || this === null) {
             // Undefined so need to bind this:
-            return oldFunction.apply(self, arguments);
+            return oldFunction.apply(realSelf, arguments);
           } else {
             return oldFunction.apply(this, arguments);
           }
@@ -97,17 +97,8 @@
   };
       // preInitialize function for Models, Views, and collections to avoid bindAll
   var preInitialize = function(self, protoProps){
-    // Better way to compare this as opposed to root
-    /*
-    if (self.constructor.__parent__ && self.constructor.__parent__.__protoProps__){
 
-      debugger;
-      propagateProps(self.constructor.prototype, self.constructor.__parent__.__protoProps__);
-    } */
-
-   
-    // TODO: recursive
-    new propagateProps(self.constructor.prototype, protoProps);
+    new propagateProps(self, self.constructor.prototype, protoProps);
 
   };
 
