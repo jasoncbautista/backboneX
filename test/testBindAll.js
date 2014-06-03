@@ -5,7 +5,7 @@ var vv = new (Backbone.View.extend({
     initialize: function(){
         var self = this;
         console.log("!");
-        this.blah.apply({}, []);
+        this.blah.apply({ a: 6}, []);
         var mmmmm = new this.blah();
         setTimeout(this.blah, 10);
 
