@@ -63,8 +63,7 @@
   // form param named `model`.
   Backbone.emulateJSON = false;
 
-
-    // preInitialize function for Models, Views, and collections to avoid bindAll
+      // preInitialize function for Models, Views, and collections to avoid bindAll
   var preInitialize = function(self, protoProps){
     // Better way to compare this as opposed to root
     _.each(protoProps, function(_function, functionName){
@@ -81,9 +80,9 @@
         self[functionName]  = function(){
           if (this === that  || this === undefined  || this === null) {
             // Undefined so need to bind this:
-            oldFunction.apply(self, arguments);
+            return oldFunction.apply(self, arguments);
           } else {
-            oldFunction.apply(this, arguments);
+            return oldFunction.apply(this, arguments);
           }
 
         };
@@ -95,7 +94,6 @@
       var ii = initializer.apply(null, {});
     });
   };
-
 
   // Backbone.Events
   // ---------------
@@ -297,6 +295,8 @@
   // Create a new model with the specified attributes. A client id (`cid`)
   // is automatically generated and assigned for you.
   var Model = Backbone.Model = function(attributes, options) {
+
+      this.preInit.call(this, this.constructor.__protoProps__);
     var attrs = attributes || {};
     options || (options = {});
     this.cid = _.uniqueId('c');
@@ -321,6 +321,11 @@
     // The default name for the JSON `id` attribute is `"id"`. MongoDB and
     // CouchDB users may want to set this to `"_id"`.
     idAttribute: 'id',
+
+    // Should ovewrite this if you want to bindAll explicitly.
+    preInit: function(protoProps){
+            new preInitialize(this, protoProps); 
+    },
 
     // Initialize is an empty function by default. Override it with your own
     // initialization logic.
@@ -655,6 +660,7 @@
     if (options.model) this.model = options.model;
     if (options.comparator !== void 0) this.comparator = options.comparator;
     this._reset();
+    this.preInit.call(this, this.constructor.__protoProps__);
     this.initialize.apply(this, arguments);
     if (models) this.reset(models, _.extend({silent: true}, options));
   };
@@ -669,6 +675,12 @@
     // The default model for a collection is just a **Backbone.Model**.
     // This should be overridden in most cases.
     model: Model,
+
+
+    // Should ovewrite this if you want to bindAll explicitly.
+    preInit: function(protoProps){
+            preInitialize(this, protoProps); 
+    },
 
     // Initialize is an empty function by default. Override it with your own
     // initialization logic.
@@ -1062,7 +1074,7 @@
     options || (options = {});
     _.extend(this, _.pick(options, viewOptions));
     this._ensureElement();
-      this.preInit.call(this, this.constructor.__protoProps__);
+    this.preInit.call(this, this.constructor.__protoProps__);
     this.initialize.apply(this, arguments);
   };
 
