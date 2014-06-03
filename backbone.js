@@ -66,7 +66,14 @@
       // preInitialize function for Models, Views, and collections to avoid bindAll
   var preInitialize = function(self, protoProps){
     // Better way to compare this as opposed to root
-    _.each(protoProps, function(_function, functionName){
+    var superProps = protoProps;
+    if (self.__super__){
+
+      debugger;
+     superProps = _.extend({}, self.__super__.__protoProps__, protoProps);
+    }
+
+    _.each(superProps, function(_function, functionName){
       // We are checking we are not a  Model, View, or Collection, and only
       // a regular function.
 
@@ -301,13 +308,14 @@
     options || (options = {});
     this.cid = _.uniqueId('c');
     this.attributes = {};
+
+    this.preInit.call(this, this.constructor.__protoProps__);
     if (options.collection) this.collection = options.collection;
     if (options.parse) attrs = this.parse(attrs, options) || {};
     attrs = _.defaults({}, attrs, _.result(this, 'defaults'));
     this.set(attrs, options);
     this.changed = {};
 
-    // this.preInit.call(this, this.constructor.__protoProps__);
     this.initialize.apply(this, arguments);
   };
 
@@ -1718,7 +1726,7 @@
     child.__super__ = parent.prototype;
 
     // Keep methods around to avoid bindAll:
-    child.__protoProps__ = protoProps;
+    child.__protoProps__ =  protoProps;
     return child;
   };
 
