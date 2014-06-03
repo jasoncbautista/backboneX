@@ -98,9 +98,10 @@
       // preInitialize function for Models, Views, and collections to avoid bindAll
   var preInitialize = function(self, protoProps){
     // Better way to compare this as opposed to root
-    if (self.constructor.__parent__){
+    if (self.constructor.__parent__ && self.constructor.__parent__.__protoProps__){
 
-      // propagateProps(self.constructor.prototype, self.constructor.__parent__.__protoProps__);
+      debugger;
+      propagateProps(self.constructor.prototype, self.constructor.__parent__.__protoProps__);
     }
 
    
