@@ -73,15 +73,11 @@
       if (_.isFunction(_function) ){
         var oldFunction = _function;
 
-        protoProps[functionName]  = function(){
-          console.log('this', this);
-          if (this === undefined  || this === null) {
+        self[functionName]  = function(){
+          if (this === root || this === self || this === undefined  || this === null) {
             // Undefined so need to bind this:
-            console.log('bound to self!!!');
             oldFunction.apply(self, arguments);
           } else {
-            console.log("bound to old this... must be on new Obj")
-            console.log(arguments);
             oldFunction.apply(this, arguments);
           }
 
@@ -1081,6 +1077,7 @@
 
     // Should ovewrite this if you want to bindAll explicitly.
     preInit: function(protoProps){
+           preInitialize(this, protoProps); 
     },
 
     // Initialize is an empty function by default. Override it with your own
@@ -1692,7 +1689,7 @@
     // Add prototype properties (instance properties) to the subclass,
     // if supplied.
     // preInitialize 
-    preInitialize( child, protoProps);
+    // preInitialize( child, protoProps);
     if (protoProps) _.extend(child.prototype, protoProps);
 
     // Set a convenience property in case the parent's prototype is needed
