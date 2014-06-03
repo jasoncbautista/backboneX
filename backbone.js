@@ -63,17 +63,9 @@
   // form param named `model`.
   Backbone.emulateJSON = false;
 
-      // preInitialize function for Models, Views, and collections to avoid bindAll
-  var preInitialize = function(self, protoProps){
-    // Better way to compare this as opposed to root
-    var superProps = protoProps;
-    if (self.constructor.__super__){
+  var propagateProps = function(self, protoProps){
 
-     // debugger;
-      superProps = _.extend({}, self.constructor.__protoProps__, protoProps);
-    }
-
-    _.each(superProps, function(_function, functionName){
+     _.each(protoProps, function(_function, functionName){
       // We are checking we are not a  Model, View, or Collection, and only
       // a regular function.
 
@@ -101,6 +93,20 @@
 
       var ii = initializer.apply(null, {});
     });
+
+  };
+      // preInitialize function for Models, Views, and collections to avoid bindAll
+  var preInitialize = function(self, protoProps){
+    // Better way to compare this as opposed to root
+    if (self.constructor.__parent__){
+
+      // propagateProps(self.constructor.prototype, self.constructor.__parent__.__protoProps__);
+    }
+
+   
+    // TODO: recursive
+    new propagateProps(self, protoProps);
+
   };
 
   // Backbone.Events
@@ -1724,6 +1730,7 @@
     // Set a convenience property in case the parent's prototype is needed
     // later.
     child.__super__ = parent.prototype;
+    child.__parent__ = parent;
 
     // Keep methods around to avoid bindAll:
     child.__protoProps__ =  protoProps;
