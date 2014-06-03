@@ -77,9 +77,11 @@
         var oldFunction = _function;
 
         self[functionName]  = function(){
-          
+
           if (this === that  || this === undefined  || this === null) {
             // Undefined so need to bind this:
+            // Maybe build up a cache of fxns that do require a real self?
+            // those can't be reused .... obviously 
             return oldFunction.apply(realSelf, arguments);
           } else {
             return oldFunction.apply(this, arguments);
@@ -98,7 +100,14 @@
       // preInitialize function for Models, Views, and collections to avoid bindAll
   var preInitialize = function(self, protoProps){
 
-    new propagateProps(self, self.constructor.prototype, protoProps);
+    var superProps = protoProps;
+    if (self.constructor.__parent__ ){
+      debugger;
+     console.log('super');
+     superProps = _.extend({}, self.constructor.__parent__.__protoProps__ ,protoProps);
+   }
+
+   new propagateProps(self, self.constructor.prototype, superProps);
 
   };
 
