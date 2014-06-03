@@ -93,7 +93,7 @@
 
       };
 
-      var ii = initializer.apply(null, {});
+      var ii = initializer.apply({}, {});
     });
 
   };
@@ -101,13 +101,14 @@
   var preInitialize = function(self, protoProps){
 
     var superProps = protoProps;
-    if (self.constructor.__parent__ ){
+    if (self.constructor.__parent__  &&   self.constructor.__parent__.__protoProps__  ){
       debugger;
      console.log('super');
      superProps = _.extend({}, self.constructor.__parent__.__protoProps__ ,protoProps);
    }
 
    new propagateProps(self, self.constructor.prototype, superProps);
+   new propagateProps(self, self,  superProps);
 
   };
 
