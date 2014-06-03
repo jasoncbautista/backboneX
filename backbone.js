@@ -67,10 +67,10 @@
   var preInitialize = function(self, protoProps){
     // Better way to compare this as opposed to root
     var superProps = protoProps;
-    if (self.__super__){
+    if (self.constructor.__super__){
 
-      debugger;
-     superProps = _.extend({}, self.__super__.__protoProps__, protoProps);
+     // debugger;
+      superProps = _.extend({}, self.constructor.__protoProps__, protoProps);
     }
 
     _.each(superProps, function(_function, functionName){
