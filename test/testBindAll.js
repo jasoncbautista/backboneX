@@ -28,6 +28,45 @@ var vv = new (Backbone.View.extend({
 
 
 
+
+var J  = function(){
+    this.initialize();
+
+
+
+};
+    
+
+_.extend(J.prototype, {
+
+    initialize: function(){
+        debugger;
+        this.self = this;
+        console.log("!");
+        self.blah.apply({ a: 6}, []);
+        var mmmmm = new self.blah();
+        setTimeout(self.blah, 10);
+
+        setTimeout(function(){self.blah()}, 500);
+        //$(document).on('click', this.click);
+        console.log("---end--");
+
+    },
+
+    blah: function() {
+        console.log("should be..... a number:", self.a);
+    },
+
+    click: function() {
+        //console.log(this.a);
+    }
+
+
+});
+
+
+
+new J();
 //////
 
 // 
@@ -72,3 +111,4 @@ new c();
 x = p.extend({"a": "hahaha"})
 
 
+new x();
