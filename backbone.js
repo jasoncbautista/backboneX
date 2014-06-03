@@ -70,8 +70,12 @@
     _.each(protoProps, function(_function, functionName){
       // We are checking we are not a  Model, View, or Collection, and only
       // a regular function.
-      
+
+
       var that = this;
+      var initializer = function(){
+
+      console.log('that', that);
       if (_.isFunction(_function) ){
         var oldFunction = _function;
 
@@ -80,13 +84,16 @@
             // Undefined so need to bind this:
             oldFunction.apply(self, arguments);
           } else {
-            debugger;
             oldFunction.apply(this, arguments);
           }
 
         };
         // _.bindAll(self, functionName);
       }
+
+      };
+
+      var ii = new initializer();
     });
   };
 
