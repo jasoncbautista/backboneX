@@ -75,12 +75,10 @@
       var initializer = function(){
 
       if (_.isFunction(_function)  && !_function.__protoProps__){
-        if (functionName === '_comparator'){
-          debugger;
-        }
+        
         var oldFunction = _function;
 
-        _function  = function(){
+        self[functionName]  = function(){
           if (this === that  || this === undefined  || this === null) {
             // Undefined so need to bind this:
             return oldFunction.apply(self, arguments);
@@ -309,7 +307,7 @@
     this.set(attrs, options);
     this.changed = {};
 
-    this.preInit.call(this, this.constructor.__protoProps__);
+    // this.preInit.call(this, this.constructor.__protoProps__);
     this.initialize.apply(this, arguments);
   };
 
@@ -662,9 +660,9 @@
   var Collection = Backbone.Collection = function(models, options) {
     options || (options = {});
     if (options.model) this.model = options.model;
+    this.preInit.call(this, this.constructor.__protoProps__);
     if (options.comparator !== void 0) this.comparator = options.comparator;
     this._reset();
-    this.preInit.call(this, this.constructor.__protoProps__);
     this.initialize.apply(this, arguments);
     if (models) this.reset(models, _.extend({silent: true}, options));
   };
