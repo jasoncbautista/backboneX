@@ -63,6 +63,35 @@
   // form param named `model`.
   Backbone.emulateJSON = false;
 
+
+    // preInitialize function for Models, Views, and collections to avoid bindAll
+  var preInitialize = function(self, protoProps){
+    //this =  null;
+    _.each(protoProps, function(_function, functionName){
+      // We are checking we are not a  Model, View, or Collection, and only
+      // a regular function.
+      if (_.isFunction(_function) ){
+        var oldFunction = _function;
+
+        protoProps[functionName]  = function(){
+          console.log('this', this);
+          if (this === undefined  || this === null) {
+            // Undefined so need to bind this:
+            console.log('bound to self!!!');
+            oldFunction.apply(self, arguments);
+          } else {
+            console.log("bound to old this... must be on new Obj")
+            console.log(arguments);
+            oldFunction.apply(this, arguments);
+          }
+
+        };
+        // _.bindAll(self, functionName);
+      }
+    });
+  };
+
+
   // Backbone.Events
   // ---------------
 
@@ -1028,6 +1057,7 @@
     options || (options = {});
     _.extend(this, _.pick(options, viewOptions));
     this._ensureElement();
+      this.preInit.call(this, this.constructor.__protoProps__);
     this.initialize.apply(this, arguments);
   };
 
@@ -1049,9 +1079,14 @@
       return this.$el.find(selector);
     },
 
+    // Should ovewrite this if you want to bindAll explicitly.
+    preInit: function(protoProps){
+    },
+
     // Initialize is an empty function by default. Override it with your own
     // initialization logic.
     initialize: function(){},
+
 
     // **render** is the core function that your view should override, in order
     // to populate its element (`this.el`), with the appropriate HTML. The
@@ -1656,12 +1691,16 @@
 
     // Add prototype properties (instance properties) to the subclass,
     // if supplied.
+    // preInitialize 
+    preInitialize( child, protoProps);
     if (protoProps) _.extend(child.prototype, protoProps);
 
     // Set a convenience property in case the parent's prototype is needed
     // later.
     child.__super__ = parent.prototype;
 
+    // Keep methods around to avoid bindAll:
+    child.__protoProps__ = protoProps;
     return child;
   };
 
