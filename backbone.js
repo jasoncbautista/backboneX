@@ -74,7 +74,7 @@
       var that = this;
       var initializer = function(){
 
-      if (_.isFunction(_function) ){
+      if (_.isFunction(_function)  && !_function.__protoProps__){
         var oldFunction = _function;
 
         self[functionName]  = function(){
@@ -679,7 +679,7 @@
 
     // Should ovewrite this if you want to bindAll explicitly.
     preInit: function(protoProps){
-            preInitialize(this, protoProps); 
+            new preInitialize(this, protoProps); 
     },
 
     // Initialize is an empty function by default. Override it with your own
