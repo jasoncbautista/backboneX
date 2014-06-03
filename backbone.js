@@ -75,9 +75,12 @@
       var initializer = function(){
 
       if (_.isFunction(_function)  && !_function.__protoProps__){
+        if (functionName === '_comparator'){
+          debugger;
+        }
         var oldFunction = _function;
 
-        self[functionName]  = function(){
+        _function  = function(){
           if (this === that  || this === undefined  || this === null) {
             // Undefined so need to bind this:
             return oldFunction.apply(self, arguments);
@@ -296,7 +299,6 @@
   // is automatically generated and assigned for you.
   var Model = Backbone.Model = function(attributes, options) {
 
-      this.preInit.call(this, this.constructor.__protoProps__);
     var attrs = attributes || {};
     options || (options = {});
     this.cid = _.uniqueId('c');
@@ -306,6 +308,8 @@
     attrs = _.defaults({}, attrs, _.result(this, 'defaults'));
     this.set(attrs, options);
     this.changed = {};
+
+    this.preInit.call(this, this.constructor.__protoProps__);
     this.initialize.apply(this, arguments);
   };
 
