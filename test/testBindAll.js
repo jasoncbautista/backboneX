@@ -3,10 +3,15 @@ var vv = new (Backbone.View.extend({
     a: 5,
 
     initialize: function(){
+        var self = this;
         console.log("!");
+        this.blah.apply({}, []);
         var mmmmm = new this.blah();
-        setTimeout(this.blah, 100);
-        $(document).on('click', this.click);
+        setTimeout(this.blah, 10);
+
+        setTimeout(function(){self.blah()}, 500);
+        //$(document).on('click', this.click);
+        console.log("---end--");
 
     },
 

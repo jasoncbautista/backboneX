@@ -66,18 +66,21 @@
 
     // preInitialize function for Models, Views, and collections to avoid bindAll
   var preInitialize = function(self, protoProps){
-    //this =  null;
+    // Better way to compare this as opposed to root
     _.each(protoProps, function(_function, functionName){
       // We are checking we are not a  Model, View, or Collection, and only
       // a regular function.
+      
+      var that = this;
       if (_.isFunction(_function) ){
         var oldFunction = _function;
 
         self[functionName]  = function(){
-          if (this === root || this === self || this === undefined  || this === null) {
+          if (this === that  || this === undefined  || this === null) {
             // Undefined so need to bind this:
             oldFunction.apply(self, arguments);
           } else {
+            debugger;
             oldFunction.apply(this, arguments);
           }
 
@@ -1077,7 +1080,7 @@
 
     // Should ovewrite this if you want to bindAll explicitly.
     preInit: function(protoProps){
-           preInitialize(this, protoProps); 
+           new preInitialize(this, protoProps); 
     },
 
     // Initialize is an empty function by default. Override it with your own
@@ -1688,8 +1691,6 @@
 
     // Add prototype properties (instance properties) to the subclass,
     // if supplied.
-    // preInitialize 
-    // preInitialize( child, protoProps);
     if (protoProps) _.extend(child.prototype, protoProps);
 
     // Set a convenience property in case the parent's prototype is needed
