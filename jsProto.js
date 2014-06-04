@@ -1,14 +1,9 @@
-
-
-
+// A simple test to learn more about how JS and prototypes work.
+// Especially the this keyword. 
 var J  = function(){
     this.initialize();
-
-
-
 };
     
-
 _.extend(J.prototype, {
 
     initialize: function(){
