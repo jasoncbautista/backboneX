@@ -362,8 +362,17 @@
     },
 
     // Get the value of an attribute.
-    get: function(attr) {
-      return this.attributes[attr];
+    get: function(attr, _default) {
+	if (_default == null) {
+		return this.attributes[attr];
+	} else {
+		// A little tricky in case the value is actually null	
+		if (this.attributes[attr] == null) {
+			return _default;
+		} else {
+			return this.attributes[attr];
+		}
+	}
     },
 
     // Get the HTML-escaped value of an attribute.
